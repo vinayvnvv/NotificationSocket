@@ -19,6 +19,7 @@ var gulpActivity = function(app, http) {
 	               'ui/app/services/*.js',
 	               'ui/app/directives/*.js',
 	               'ui/app/admin/ctrl/*.js',
+	               'ui/app/broker/ctrl/*.js',
 	               'ui/app/push/*.js'
 	            ];
 

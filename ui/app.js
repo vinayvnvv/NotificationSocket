@@ -14,6 +14,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
        	  controller: "adminCtrl"
        })
 
+   $stateProvider
+       .state("broker", {
+          url: "/broker",
+          templateUrl: "app/broker/html/index.html",
+          controller: "brokerCtrl"
+       })    
+
     $stateProvider
        .state("push", {
        	  url: "/push",

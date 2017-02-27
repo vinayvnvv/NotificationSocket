@@ -1,9 +1,16 @@
 app.controller('pushCtrl', ['$scope', 'Notification', function($scope, Notification){
 	console.log("called admin ctrl")
 
-	$scope.pushNotification = function() {
+	$scope.pushNotification = function(type) {
 		console.log("pushing")
-		Notification.push.admin({text: $scope.text});
+		var data = {
+			id:$scope.id,
+			text:$scope.text
+		}
+		if(type == 'admin')
+			Notification.push.admin(data);
+	    if(type == 'broker')
+	    	Notification.push.broker(data);
 	}
 
 

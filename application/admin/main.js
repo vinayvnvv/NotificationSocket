@@ -5,11 +5,14 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var strings = require('./../strings');
 var db_url = strings.db_url;
+var cors = require('cors')
 
 
 
-	var insertDocument = function(db, data, callback_suc, callback_err) {
-	   db.collection('admin').insertOne(data, function(err, result) {
+
+	var insertDocument = function(db, id, data, callback_suc, callback_err) {
+	   var collection = "admin_" + id;
+	   db.collection(collection).insertOne(data, function(err, result) {
 	    if(err) { callback_err(err); }
 	    else {
 		    console.log("Inserted a document into the modules collection.");
@@ -18,15 +21,15 @@ var db_url = strings.db_url;
 	  });
 	};
 
-  	var fetchDocument = function(db, callback_suc, callback_err) {
-	   db.collection('admin').find().toArray(function(err, docs) {
+  	var fetchDocument = function(db, id, callback_suc, callback_err) {
+	   db.collection('admin_' + id).find().toArray(function(err, docs) {
         assert.equal(null, err);
         callback_suc(docs)
       });
 	};
  
-   var updateSeenStatus = function(db, callback_suc, callback_err) {
-   	  db.collection('admin').update({},{$set:{"seen":true}},{multi:true}, function(err, result) {
+   var updateSeenStatus = function(db, id, callback_suc, callback_err) {
+   	  db.collection('admin_' + id).update({},{$set:{"seen":true}},{multi:true}, function(err, result) {
 	    if(err) { callback_err(err); }
 	    else {
 		    console.log("set seen status");
@@ -34,8 +37,8 @@ var db_url = strings.db_url;
 		}
 	  });
    }
-   var clearDocument = function(db, callback_suc, callback_err) {
-   	 db.collection('admin').drop(function(err, result) {
+   var clearDocument = function(db, id, callback_suc, callback_err) {
+   	 db.collection('admin_' + id).drop(function(err, result) {
 	    if(err) { callback_err(err); }
 	    else {
 		    console.log("cleared admin notification....");
@@ -50,24 +53,31 @@ var db_url = strings.db_url;
 
 
 
-router.post('/insert', function(req, res, next) {
+router.post('/insert/:id', function(req, res, next) {
 
 	setTimeout(run, 10);
 	function run() {
 		MongoClient.connect(db_url, function(err, db) {
 		  assert.equal(null, err);
-		  insertDocument(db, req.body, function() {
+		  insertDocument(db, req.params.id, req.body, function() {
 		  	  res.json({success:1});
 		      db.close();
 		  }, function(err) {
-		  	  res.json({success:0,msg:err});
+		  	  res.status(400).json({success:0,msg:err});
 		      db.close();
 		  });
 		});
 	}
 
 })
-router.get('/get', function(req, res, next) {
+router.get('/get/:id', function(req, res, next) {
+
+	if(!isValidId(req.params.id)) {
+		res.status(400).send("Id is required!");
+		return;
+	}
+
+
     
       setTimeout(run, 12);
 
@@ -75,11 +85,11 @@ router.get('/get', function(req, res, next) {
 
       	  MongoClient.connect(db_url, function(err, db) {
 		  assert.equal(null, err);
-		  fetchDocument(db, function(result) {
+		  fetchDocument(db, req.params.id, function(result) {
 		  	  res.json(result);
 		      db.close();
 		  }, function(err) {
-		  	  res.json({success:0,msg:err});
+		  	  res.status(400).json({success:0,msg:err});
 		      db.close();
 		  });
 		});
@@ -90,16 +100,22 @@ router.get('/get', function(req, res, next) {
 });
 
 //set seen status
-router.post('/seen', function(req, res, next) {
+router.post('/seen/:id', function(req, res, next) {
+
+	if(!isValidId(req.params.id)) {
+		res.status(400).send("Id is required!");
+		return;
+	}
+
 	setTimeout(run, 12);
 	function run() {
 		MongoClient.connect(db_url, function(err, db) {
 		  assert.equal(null, err);
-		  updateSeenStatus(db, function() {
+		  updateSeenStatus(db, req.params.id, function() {
 		  	  res.json({success:1});
 		      db.close();
 		  }, function(err) {
-		  	  res.json({success:0,msg:err});
+		  	  res.status(400).json({success:0,msg:err});
 		      db.close();
 		  });
 		});
@@ -109,16 +125,22 @@ router.post('/seen', function(req, res, next) {
 });
 
 //clear
-router.post('/clear', function(req, res, next) {
+router.post('/clear/:id', function(req, res, next) {
+
+	if(!isValidId(req.params.id)) {
+		res.status(400).send("Id is required!");
+		return;
+	}
+	
 	setTimeout(run, 12);
 	function run() {
 		MongoClient.connect(db_url, function(err, db) {
 		  assert.equal(null, err);
-		  clearDocument(db, function() {
+		  clearDocument(db, req.params.id, function() {
 		  	  res.json({success:1});
 		      db.close();
 		  }, function(err) {
-		  	  res.json({success:0,msg:err});
+		  	  res.status(400).json({success:0,msg:err});
 		      db.close();
 		  });
 		});
@@ -126,6 +148,15 @@ router.post('/clear', function(req, res, next) {
 	}
 		
 });
+
+
+function isValidId(id)  {
+   if(id == undefined || id == 0 || id == 'undefined') {
+		return false;
+	}
+
+	return true;
+}
 
 
 module.exports = router;

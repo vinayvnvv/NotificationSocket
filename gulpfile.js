@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var cors = require('cors')
+var cors = require('cors');
 app.use(cors());
 var http = require('http').Server(app);
 var path = require('path');

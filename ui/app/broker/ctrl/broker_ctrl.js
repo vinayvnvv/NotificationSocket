@@ -1,19 +1,18 @@
-app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notification){
+app.controller('brokerCtrl', ['$scope', 'Notification', function($scope, Notification){
 	$scope.nData = [];
 	$scope.not = false;
 	$scope.not_count = 0;
 	console.log("called admin ctrl")
 	$scope.id = "new_id";
 
-    Notification.get.admin(
+    Notification.get.broker(
 
         {id:$scope.id},
-    	function(data){ $scope.nData = data; $scope.findInitNotiCount(); },
-    	function(err){ console.log(err); }
+    	function(data){ $scope.nData = data; $scope.findInitNotiCount(); }
 
     	);
 
-	Notification.listen.admin(
+	Notification.listen.broker(
 
         {id:$scope.id},
 		function(data) {
@@ -39,7 +38,7 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 	}
 
 	$scope.clearNoti = function() {
-		Notification.clear.admin(
+		Notification.clear.broker(
        
             {id:$scope.id},
 			function(){ $scope.not_count = 0; $scope.nData = []; document.title = "Admin"; },
@@ -49,8 +48,8 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 	}
 
 	$scope.seenNoti = function() {
-		document.title = "Admin";
-		Notification.seen.admin(
+		document.title = "Broker";
+		Notification.seen.broker(
 
             {id:$scope.id},
 			function(){ $scope.not_count = 0; /*$scope.$apply();*/ },

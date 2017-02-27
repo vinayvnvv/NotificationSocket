@@ -3,10 +3,15 @@
 
 <hr/>
 <h4> Push Admin Notification </h4>
-<input type="text" ng-model="text">
-<button ng-click="pushNotification()">Push Noti</button>
+Id : <input type="text" ng-model="id"/><br/><br/>
+Msg: <input type="text" ng-model="text">
+<br/><br/>
+<button ng-click="pushNotification('admin')">Push Admin Noti</button>
+<button ng-click="pushNotification('broker')">Push Broker Noti</button>
 
-<hr/>
+
+
+
 
 
 
