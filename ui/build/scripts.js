@@ -155,7 +155,7 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 	$scope.not = false;
 	$scope.not_count = 0;
 	console.log("called admin ctrl")
-	$scope.id = "new_id";
+	$scope.id = localStorage.getItem("n_a_id") || "new_id";
 
     Notification.get.admin(
 
@@ -223,6 +223,11 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 		//$scope.$apply();
 	}
 
+	$scope.changeId = function() {
+       localStorage.setItem("n_a_id", $scope.id);
+       location.reload();
+	}
+
 
 	
 }])
@@ -231,7 +236,7 @@ app.controller('brokerCtrl', ['$scope', 'Notification', function($scope, Notific
 	$scope.not = false;
 	$scope.not_count = 0;
 	console.log("called admin ctrl")
-	$scope.id = "new_id";
+	$scope.id = localStorage.getItem("n_b_id") || "new_id";
 
     Notification.get.broker(
 
@@ -296,6 +301,11 @@ app.controller('brokerCtrl', ['$scope', 'Notification', function($scope, Notific
 		if($scope.not_count>0)
 			document.title = $scope.not_count + " New Notification";
 		//$scope.$apply();
+	}
+
+	$scope.changeId = function() {
+       localStorage.setItem("n_b_id", $scope.id);
+       location.reload();
 	}
 
 

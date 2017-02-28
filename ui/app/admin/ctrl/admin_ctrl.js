@@ -3,7 +3,7 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 	$scope.not = false;
 	$scope.not_count = 0;
 	console.log("called admin ctrl")
-	$scope.id = "new_id";
+	$scope.id = localStorage.getItem("n_a_id") || "new_id";
 
     Notification.get.admin(
 
@@ -69,6 +69,11 @@ app.controller('adminCtrl', ['$scope', 'Notification', function($scope, Notifica
 		if($scope.not_count>0)
 			document.title = $scope.not_count + " New Notification";
 		//$scope.$apply();
+	}
+
+	$scope.changeId = function() {
+       localStorage.setItem("n_a_id", $scope.id);
+       location.reload();
 	}
 
 

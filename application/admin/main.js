@@ -5,7 +5,6 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var strings = require('./../strings');
 var db_url = strings.db_url;
-var cors = require('cors')
 
 
 

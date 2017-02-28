@@ -1,6 +1,6 @@
 
 <div>
-
+Change Id : <input ng-model="id" tpe="text"/> <button ng-click="changeId()">Change</button><br/><br/>
 <button ng-click="expandNoti()">Notification <span ng-if='not_count>0' style="background-color: #cc0000;color:#fff;padding: 1px 4px;">({{not_count}})</span></button>  <button ng-click="clearNoti()">clear</button>
 <ul ng-if="not" ng-click="seenNoti()">
   <li ng-repeat="n in nData | orderBy:'-'">{{n.text}}</li>
